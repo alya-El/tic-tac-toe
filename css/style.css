@@ -1,0 +1,178 @@
+:root{
+    --cell-size: 100px;
+    --mark-size: calc(var(--cell-size) * 0.8);
+}
+body{
+    font-family: 'Hubballi', cursive;
+}
+.board{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    /*aligns actual cells*/
+    justify-content: center;
+    align-content: center;
+    /*aligns individual items inside cells*/
+    justify-items: center;
+    align-items: center;
+}
+
+/*styling for individual cells*/
+.cell{
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.cell.x,
+.cell.o{
+    cursor: not-allowed;
+}
+
+.cell:nth-child(-n+3){
+    border-top: none;
+}
+.cell:nth-child(n+7){
+    border-bottom: none;
+}
+.cell:nth-child(n+7){
+    border-bottom: none;
+}
+.cell:nth-child(3n+1){
+    border-left: none;
+}
+.cell:nth-child(3n+3){
+    border-right: none;
+}
+
+/*styling for 'x'*/
+.cell.x::before,
+.cell.x::after,
+.board.x .cell:not(.x):not(.o):hover::before,
+.board.x .cell:not(.x):not(.o):hover::after{
+   content: '';
+   width: calc(var(--mark-size) * 0.15);
+   height: var(--mark-size); 
+   background-color: black;
+   position: absolute;
+}
+.cell.x::before,
+.board.x .cell:not(.x):not(.o):hover::before{
+    transform: rotate(45deg);
+}
+.cell.x::after,
+.board.x .cell:not(.x):not(.o):hover::after{
+    transform: rotate(-45deg);
+}
+.board.x .cell:not(.x):not(.o):hover::before,
+.board.x .cell:not(.x):not(.o):hover::after{
+    background-color: grey;
+}
+
+/*styling for 'o'*/
+.cell.o::before,
+.cell.o::after,
+.board.o .cell:not(.x):not(.o):hover::before,
+.board.o .cell:not(.x):not(.o):hover::after{
+    content: '';
+    position: absolute;
+    border-radius: 50px;
+}
+.cell.o::before,
+.board.o .cell:not(.x):not(.o):hover::before{
+    width: var(--mark-size);
+    height: var(--mark-size);
+    background-color: black;
+}
+.cell.o::after,
+.board.o .cell:not(.x):not(.o):hover::after{
+    width: calc(var(--mark-size) * 0.75);
+    height: calc(var(--mark-size) * 0.75);
+    background-color: white;
+}
+.board.o .cell:not(.x):not(.o):hover::before{
+    background-color: grey;
+}
+
+/*styling for winning messege*/
+.winner{
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: black;
+    background-color: rgba(0, 0, 0, 0.9);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 3.5em;
+    color: white;
+}
+.winner.show{
+    display: flex;
+}
+.winner button{
+    cursor: pointer;
+    min-width: 250px;
+    min-height: 55px;
+    font-size: .6em;
+    margin: 10px;
+    border-radius: 10px;
+    border: none;
+}
+.winner button:hover{
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+}
+
+/*styling for starting screen*/
+.start-screen{
+    display: none;
+    position: fixed;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-bottom: 20%;
+    background-color: white;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5vmin;
+    text-align: center;
+}
+.start-screen > *{
+    width: 100%;
+}
+.start-screen.show{
+    display: flex;
+}
+.start-screen button{
+    cursor: pointer;
+    min-width: 250px;
+    min-height: 55px;
+    font-size: .6em;
+    margin: 10px;
+    width: 100px;
+    font-size: 3vmin;
+    border-radius: 10px;
+    border: none;
+    border-bottom: 4px solid #6ea7f3;
+    box-shadow: 6px 6px 6px #999;
+    background: #86b6f5; 
+}
+.start-screen button:hover{   
+    color: white;
+}
+.start-screen button:active {
+    box-shadow: 2px 2px 2px #777;
+    border-bottom: 1px solid #6ea7f3;
+    transform: translateY(3px);
+}

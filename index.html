@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+
+    <!-- Nicolas Gallagher
+          Normalize.css
+          Downloaded from:
+          https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.css
+          On 24 Feb 2022
+    -->
+  	<link rel="stylesheet" type="text/css" href="./css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+
+     <!-- Google Fonts
+          Font: Hubballi
+          On 24 Feb 2022
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hubballi&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1></h1>
+    <div class="board" id="board">
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+    </div>
+
+    <div class="winner" id="winner">
+        <div data-winner-text>X wins!</div>
+        <button id="restart">Restart</button>
+        <button id="new-game">New Game</button>
+    </div>
+    
+    <div class="start-screen" id="start-screen">
+        <h1 class="intro">Tic-Tac-Toe</h1>
+        <h2 class="intro">Who do you wish to play against?</h2>
+        <button id="ai-bot">AI Bot</button>
+        <button id="friend">Friend</button>
+    </div>
+
+    <script type="text/javascript" src="./script.js"></script>
+</body>
+</html>
