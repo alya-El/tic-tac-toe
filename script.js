@@ -1,31 +1,46 @@
 const X_CLASS = 'x';
 const O_CLASS = 'o';
 
+//audio for button click
+const audio  = new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/click.mp3');
+
 const cellElements = document.querySelectorAll('[data-cell]');
 const board = document.querySelector('#board');
 const winnerMessg = document.querySelector('[data-winner-text]');
 const winnerScreen = document.querySelector('#winner');
-//const startScreen = document.querySelector('#start-screen');
+const startScreen = document.querySelector('#start-screen');
 
 const restartBtn = document.querySelector('#restart');
 const newGameBtn = document.querySelector('#new-game');
 
 //const bot = document.querySelector('#ai-bot');
-//const friend = document.querySelector('#friend');
+const friendBtn = document.querySelector('#friend');
 
 let Xturn;
 let boardArray;
 let cellIndecies;
 
 restartBtn.addEventListener("click", startGame);
+newGameBtn.addEventListener("click", StartingScreen);
 
-startGame();
+//startGame();
+StartingScreen();
+
+function StartingScreen(){
+    startScreen.classList.add('show');
+    friendBtn.addEventListener("click", function(){
+        audio.load();
+        audio.play();
+        startGame();
+    });
+}
 
 function startGame(){
     Xturn = true;
     boardArray = [];
     cellIndecies = [].slice.call(cellElements, 0);
     winnerScreen.classList.remove('show');
+    startScreen.classList.remove('show');
 
     setBoardHover();
 
