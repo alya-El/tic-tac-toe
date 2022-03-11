@@ -13,12 +13,21 @@ const startScreen = document.querySelector('#start-screen');
 const restartBtn = document.querySelector('#restart');
 const newGameBtn = document.querySelector('#new-game');
 
-//const bot = document.querySelector('#ai-bot');
+const botBtn = document.querySelector('#ai-bot');
 const friendBtn = document.querySelector('#friend');
 
 let Xturn;
 let boardArray;
 let cellIndecies;
+let botPlayer;
+
+let delay = (function() {
+    var timer = 0;
+    return function(callback, ms) {
+        clearTimeout (timer);
+        timer = setTimeout(callback, ms);
+    };
+})();
 
 restartBtn.addEventListener("click", startGame);
 newGameBtn.addEventListener("click", StartingScreen);
@@ -28,16 +37,20 @@ StartingScreen();
 
 function StartingScreen(){
     startScreen.classList.add('show');
+    botPlayer = false;
+
     friendBtn.addEventListener("click", function(){
-        audio.load();
-        audio.play();
         startGame();
+    });
+    botBtn.addEventListener("click", function(){
+        startGame();
+        botPlayer = true;
     });
 }
 
 function startGame(){
     Xturn = true;
-    boardArray = [];
+    boardArray = new Array(9);
     cellIndecies = [].slice.call(cellElements, 0);
     winnerScreen.classList.remove('show');
     startScreen.classList.remove('show');
@@ -53,7 +66,10 @@ function startGame(){
 }
 
 function cellClicked(e){
-    let cell = e.target; 
+    audio.load();
+    audio.play();
+     
+    let cell = Xturn || !botPlayer ? e.target : e;
     let cellIndex = cellIndecies.indexOf(cell);
     let currClass = Xturn ? X_CLASS : O_CLASS;
 
@@ -71,6 +87,13 @@ function cellClicked(e){
     else{
         //set currClass to who's turn it is
         currClass = Xturn ? X_CLASS : O_CLASS;
+
+        //if playing with ai, play ai move
+        if(!Xturn && botPlayer){
+            delay(function(){
+                botMove();
+            }, 600 );   
+        }
         //set board hover
         setBoardHover();
     }
@@ -96,6 +119,17 @@ function placeMark(cell, currClass, cellIndex){
     Xturn = Xturn ? false : true;
 };
 
+function botMove(){
+    let randomIndex = Math.floor(Math.random() * boardArray.length);
+
+    while(boardArray[randomIndex] == 'x'|| boardArray[randomIndex] == 'o'){
+        randomIndex = Math.floor(Math.random() * boardArray.length);
+    }
+    let cell = document.querySelector(`.cell:nth-child(${randomIndex+1})`);
+
+    cellClicked(cell);
+};
+
 function setBoardHover(){
     board.classList.remove(X_CLASS);
     board.classList.remove(O_CLASS);
@@ -103,7 +137,7 @@ function setBoardHover(){
     if(Xturn){
         board.classList.add(X_CLASS);
     }
-    else{
+    else if(!botPlayer && !Xturn){
         board.classList.add(O_CLASS);
     }
 };
