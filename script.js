@@ -51,6 +51,7 @@ function StartingScreen(){
 function startGame(){
     Xturn = true;
     boardArray = new Array(9);
+    console.log(boardArray)
     cellIndecies = [].slice.call(cellElements, 0);
     winnerScreen.classList.remove('show');
     startScreen.classList.remove('show');
@@ -68,7 +69,7 @@ function startGame(){
 function cellClicked(e){
     audio.load();
     audio.play();
-     
+
     let cell = Xturn || !botPlayer ? e.target : e;
     let cellIndex = cellIndecies.indexOf(cell);
     let currClass = Xturn ? X_CLASS : O_CLASS;
@@ -81,7 +82,7 @@ function cellClicked(e){
         endGame(false);
     }
     //check for draw
-    else if(!checkWinner(currClass) && !boardArray.includes(undefined) && boardArray.length === 9){
+    else if(!checkWinner(currClass) && !boardArray.includes(undefined)){
         endGame(true);
     }
     else{
@@ -120,14 +121,69 @@ function placeMark(cell, currClass, cellIndex){
 };
 
 function botMove(){
-    let randomIndex = Math.floor(Math.random() * boardArray.length);
+    let bestScore = -1000;
+    let bestMove = 0;
 
-    while(boardArray[randomIndex] == 'x'|| boardArray[randomIndex] == 'o'){
-        randomIndex = Math.floor(Math.random() * boardArray.length);
+    for(let i = 0; i < boardArray.length; i++){
+        if(typeof boardArray[i] == 'undefined'){
+            boardArray[i] = O_CLASS;
+            let score = minimax(boardArray, false);
+            boardArray[i] = undefined;
+            if(score > bestScore){
+                bestScore = score;
+                bestMove = i;
+            }
+        } 
     }
-    let cell = document.querySelector(`.cell:nth-child(${randomIndex+1})`);
-
+    let cell = document.querySelector(`.cell:nth-child(${bestMove+1})`);
     cellClicked(cell);
+};
+
+function minimax(boardArray, isMaximizing){
+    //if bot wins
+    if(checkWinner(O_CLASS)){
+        return 1;
+    }
+    //if human(enemy) wins
+    else if(checkWinner(X_CLASS)){
+        return -1;
+    }
+    //if there is a draw
+    else if(!checkWinner(X_CLASS) && !checkWinner(O_CLASS) && !boardArray.includes(undefined)){
+        return 0;
+    }
+    //if playing as an ai
+    if(isMaximizing){
+        let bestScore = -1000;
+        //for each possible position, find the best score
+        for(let i = 0; i < boardArray.length; i++){
+            if(typeof boardArray[i] == 'undefined'){
+                boardArray[i] = O_CLASS;
+                let score = minimax(boardArray, false);
+                boardArray[i] = undefined;
+                if(score > bestScore){
+                    bestScore = score;
+                }
+            } 
+        }
+        return bestScore;
+    }
+    //if playing as a human(enemy)
+    else{
+        let bestScore = 800;
+        //for each possible position, find the lowest score
+        for(let i = 0; i < boardArray.length; i++){
+            if(typeof boardArray[i] == 'undefined'){
+                boardArray[i] = X_CLASS;
+                let score = minimax(boardArray, true);
+                boardArray[i] = undefined;
+                if(score < bestScore){
+                    bestScore = score;
+                }
+            } 
+        }
+        return bestScore;  
+    }
 };
 
 function setBoardHover(){
@@ -142,6 +198,7 @@ function setBoardHover(){
     }
 };
 
+// winning combinations
 function checkWinner(currClass){
     if(boardArray[0] === currClass){
         if(boardArray[1] === currClass && boardArray[2] === currClass){
