@@ -21,6 +21,7 @@ let boardArray;
 let cellIndecies;
 let botPlayer;
 
+//function to delay execution of botMove()
 let delay = (function() {
     var timer = 0;
     return function(callback, ms) {
@@ -51,7 +52,7 @@ function StartingScreen(){
 function startGame(){
     Xturn = true;
     boardArray = new Array(9);
-    console.log(boardArray)
+    
     cellIndecies = [].slice.call(cellElements, 0);
     winnerScreen.classList.remove('show');
     startScreen.classList.remove('show');
