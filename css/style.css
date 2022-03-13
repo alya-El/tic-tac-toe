@@ -176,3 +176,52 @@ body{
     border-bottom: 1px solid #6ea7f3;
     transform: translateY(3px);
 }
+
+.level{
+    width: 300px;
+    height: 160px;
+    z-index: 2;
+    top: 40%;
+    left: 50%;
+    margin-left: -150px;
+    position:fixed;
+    background-color: white;
+    border: 3px solid black;
+    border-radius: 5px;
+    display: none;
+    flex-direction: column;
+}
+.level.show{
+    display: flex;
+}
+.level > *{
+    margin: 15px;
+    margin-top: 20px;   
+    height: 40px;
+    padding: 0 10px 0 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: larger;
+    font-weight: 600;
+}
+.level > *:hover{
+    opacity: .9;
+}
+.level-easy{
+    background-color: rgb(145, 228, 145);
+}
+.level-hard{
+    background-color: rgb(245, 130, 130);
+}
+.background-screen{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background-color: gray;
+    opacity: 0.3;
+    z-index: 1;
+    display: none;
+}
+.background-screen.show{
+    display: block;
+}

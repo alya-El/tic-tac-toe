@@ -9,6 +9,10 @@ const board = document.querySelector('#board');
 const winnerMessg = document.querySelector('[data-winner-text]');
 const winnerScreen = document.querySelector('#winner');
 const startScreen = document.querySelector('#start-screen');
+const backgroundScreen = document.querySelector('.background-screen');
+const levels = document.querySelector('.level');
+const easyBtn = document.querySelector('.level-easy');
+const hardBtn = document.querySelector('.level-hard');
 
 const restartBtn = document.querySelector('#restart');
 const newGameBtn = document.querySelector('#new-game');
@@ -20,6 +24,7 @@ let Xturn;
 let boardArray;
 let cellIndecies;
 let botPlayer;
+let levelEasy;
 
 //function to delay execution of botMove()
 let delay = (function() {
@@ -33,7 +38,6 @@ let delay = (function() {
 restartBtn.addEventListener("click", startGame);
 newGameBtn.addEventListener("click", StartingScreen);
 
-//startGame();
 StartingScreen();
 
 function StartingScreen(){
@@ -44,10 +48,24 @@ function StartingScreen(){
         startGame();
     });
     botBtn.addEventListener("click", function(){
-        startGame();
-        botPlayer = true;
+        backgroundScreen.classList.add('show');
+        levels.classList.add('show');
     });
-}
+    easyBtn.addEventListener("click", function(){
+        startBotGame(true);
+    });
+    hardBtn.addEventListener("click", function(){
+        startBotGame(false);
+    });
+};
+
+function startBotGame(isEasy){
+    startGame();
+    botPlayer = true;
+    levelEasy = isEasy;
+    backgroundScreen.classList.remove('show');
+    levels.classList.remove('show');
+};
 
 function startGame(){
     Xturn = true;
@@ -75,29 +93,31 @@ function cellClicked(e){
     let cellIndex = cellIndecies.indexOf(cell);
     let currClass = Xturn ? X_CLASS : O_CLASS;
 
-    //place mark and switch turns
-    placeMark(cell, currClass, cellIndex);
+    if(!cell.classList.contains(X_CLASS) && !cell.classList.contains(O_CLASS)){
+        //place mark and switch turns
+        placeMark(cell, currClass, cellIndex);
 
-    //check for win
-    if(checkWinner(currClass)){
-        endGame(false);
-    }
-    //check for draw
-    else if(!checkWinner(currClass) && !boardArray.includes(undefined)){
-        endGame(true);
-    }
-    else{
-        //set currClass to who's turn it is
-        currClass = Xturn ? X_CLASS : O_CLASS;
-
-        //if playing with ai, play ai move
-        if(!Xturn && botPlayer){
-            delay(function(){
-                botMove();
-            }, 600 );   
+        //check for win
+        if(checkWinner(currClass)){
+            endGame(false);
         }
-        //set board hover
-        setBoardHover();
+        //check for draw
+        else if(!checkWinner(currClass) && !boardArray.includes(undefined)){
+            endGame(true);
+        }
+        else{
+            //set currClass to who's turn it is
+            currClass = Xturn ? X_CLASS : O_CLASS;
+
+            //if playing with ai, play ai move
+            if(!Xturn && botPlayer){
+                delay(function(){
+                    botMove();
+                }, 600 );   
+            }
+            //set board hover
+            setBoardHover();
+        }
     }
 };
 
@@ -122,21 +142,35 @@ function placeMark(cell, currClass, cellIndex){
 };
 
 function botMove(){
-    let bestScore = -1000;
-    let bestMove = 0;
+    let cell;
 
-    for(let i = 0; i < boardArray.length; i++){
-        if(typeof boardArray[i] == 'undefined'){
-            boardArray[i] = O_CLASS;
-            let score = minimax(boardArray, false);
-            boardArray[i] = undefined;
-            if(score > bestScore){
-                bestScore = score;
-                bestMove = i;
-            }
-        } 
+    if(levelEasy == false){
+        //unbeatable mode
+        let bestScore = -1000;
+        let bestMove = 0;
+
+        for(let i = 0; i < boardArray.length; i++){
+            if(typeof boardArray[i] == 'undefined'){
+                boardArray[i] = O_CLASS;
+                let score = minimax(boardArray, false);
+                boardArray[i] = undefined;
+                if(score > bestScore){
+                    bestScore = score;
+                    bestMove = i;
+                }
+            } 
+        }
+        cell = document.querySelector(`.cell:nth-child(${bestMove+1})`);
+    }   
+    else{
+        let randomIndex = Math.floor(Math.random() * boardArray.length);
+
+        while(boardArray[randomIndex] == 'x'|| boardArray[randomIndex] == 'o'){
+            randomIndex = Math.floor(Math.random() * boardArray.length);
+        }
+        cell = document.querySelector(`.cell:nth-child(${randomIndex+1})`);
     }
-    let cell = document.querySelector(`.cell:nth-child(${bestMove+1})`);
+
     cellClicked(cell);
 };
 
